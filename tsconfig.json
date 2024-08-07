@@ -1,0 +1,30 @@
+{
+    "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+        "allowUnreachableCode": false,
+        "alwaysStrict": true,
+        "baseUrl": ".",
+        "declarationMap": true,
+        "declaration": true,
+        "experimentalDecorators": true,
+        "inlineSources": true,
+        "lib": ["esnext", "dom", "dom.iterable"],
+        "module": "esNext",
+        "moduleResolution": "node",
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitAny": true,
+        "noImplicitOverride": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "outDir": "dist",
+        "removeComments": true,
+        "sourceMap": true,
+        "strict": true,
+        "target": "esnext",
+        "useDefineForClassFields": false
+    },
+    "include": ["src/**/*.ts"],
+    "exclude": ["src/**/*.spec.ts"]
+}

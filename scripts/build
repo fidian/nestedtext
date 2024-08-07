@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+set -eEu -o pipefail
+
+status() {
+    echo "### $1"
+}
+
+runTerser() {
+    terser --mangle-props regex=/^_/ --ecma 6 --compress --mangle --module ${@+"$@"}
+}
+
+status "Clean"
+rm -rf dist/
+
+status "Compile"
+tsc
+
+status "Build module"
+rollup dist/index.js --file dist/nestedtext.mjs --format esm
+runTerser --module -o dist/nestedtext.min.mjs dist/nestedtext.mjs
+
+status "Build UMD"
+rollup dist/index.js --file dist/nestedtext.umd.js --format umd --name NestedText
+runTerser -o dist/nestedtext.umd.min.js dist/nestedtext.umd.js

@@ -1,0 +1,52 @@
+{
+    "name": "nestedtext",
+    "version": "1.0.0",
+    "description": "Human friendly representation of data, similar to YAML or JSON",
+    "keywords": [
+        "hook",
+        "hooks",
+        "middleware",
+        "event",
+        "emitter",
+        "eventemitter"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/fidian/nestedtext.git"
+    },
+    "author": "Tyler Akins <fidian@rumkin.com>",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/fidian/nestedtext/issues"
+    },
+    "homepage": "https://github.com/fidian/nestedtext",
+    "scripts": {
+        "build": "scripts/build",
+        "reinstall": "rm -rf node_modules && npm install",
+        "test": "tsx node_modules/.bin/ava"
+    },
+    "main": "dist/index.js",
+    "module": "dist/nestedtext.mjs",
+    "unpkg": "dist/nestedtext.umd.min.js",
+    "type": "module",
+    "types": "dist/index.d.ts",
+    "devDependencies": {
+        "ava": "^6.1.3",
+        "tsx": "^4.16.2",
+        "typescript": "^5.5.3"
+    },
+    "ava": {
+        "extensions": {
+            "cjs": true,
+            "mjs": true,
+            "js": true,
+            "ts": "commonjs"
+        }
+    },
+    "dependencies": {
+        "@types/node": "^20.14.12",
+        "read-input": "^0.3.1",
+        "rollup": "^4.20.0",
+        "terser": "^5.31.3"
+    }
+}
