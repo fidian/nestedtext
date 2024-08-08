@@ -1,8 +1,8 @@
 # NestedText
 
-Please see https://nestedtext.org/ for more information about this format.
+Please see [NestedText] for more information about this format.
 
-In brief, it allows software to have data stored as text, similar to YAML and JSON, but without the abiguity and quoting that's necessary with either one of those.
+In brief, it allows software to have data stored as text, similar to YAML and JSON, but without the ambiguity and quoting that's necessary with either one of those.
 
 Here's a short example.
 
@@ -21,7 +21,7 @@ Katheryn McDaniel:
         - board member
 ```
 
-This is the JavaScript implementation of NestedText.
+This is a native JavaScript implementation of NestedText. There is also [@rmw/nestedtext](https://www.npmjs.com/package/@rmw/nestedtext), which is much heavier (about 2 megs of WASM).
 
 
 ## API
@@ -59,7 +59,11 @@ import { dump, load } from 'https://unpkg.com/inject-hooks?module';
 
 ### `NestedText.load(input: string)`
 
-Convert NestedText to native data structures.
+Convert [NestedText] to native data structures.
+
+### `NestedText.loadMin(input: string)`
+
+Convert [Minimal NestedText](https://nestedtext.org/en/stable/minimal-nestedtext.html) to native data structures. This uses significantly less verbose error messages to help with minifying the bundle size when using `loadMin`.
 
 ### `NestedText.dump(input: string, options: DumpOptions)`
 
@@ -69,3 +73,6 @@ The options can have the following properties:
 
 * `indent`: What to use for indent. This must contain only spaces and must contain at least one space, otherwise it generates invalid NestedText. Defaults to four spaces to match the official tests.
 * `newline`: The newline character to use. Defaults to `\n`.
+
+
+[NestedText]: https://nestedtext.org/
