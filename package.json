@@ -1,6 +1,6 @@
 {
     "name": "nestedtext",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "Human friendly representation of data, similar to YAML or JSON",
     "keywords": [
         "hook",

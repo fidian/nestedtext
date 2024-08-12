@@ -54,11 +54,14 @@ function testDump(dir) {
         test(`${basename(dir)}: dump produces NestedText`, (t) => {
             const options: DumpOptions = {};
 
-            // string_8 has no way to detect the end of line marker from the input JSON.
+            // string_8 has no way to detect the end of line marker from the
+            // input JSON.
+            // https://github.com/KenKundert/nestedtext_tests/issues/11
+            // It is supposed to be system-dependent and string_8 needs
+            // updating.
+            // https://github.com/KenKundert/nestedtext_tests/issues/5#issuecomment-2276809952
             if (nt.indexOf('\r\n') !== -1) {
                 options.newline = '\r\n';
-            } else if (nt.indexOf('\r') !== -1) {
-                options.newline = '\r';
             }
 
             t.is(dump(json, options), nt);

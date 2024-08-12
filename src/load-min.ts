@@ -13,7 +13,6 @@ interface ParsedLine {
     key?: string; // For dictionary items only
     indent: number;
     line: number;
-    newline: string;
     nextIndex: number;
     startIndex: number; // Start of line
     type: ParsedLineType;
@@ -25,7 +24,6 @@ export function loadMin(input: string): NestedText | null {
         column: 1,
         indent: 0,
         line: 0,
-        newline: "",
         nextIndex: 0,
         startIndex: 0,
         type: ParsedLineType.BLANK,
@@ -42,7 +40,7 @@ export function loadMin(input: string): NestedText | null {
             parsed.column
         );
         lines.push(parsed);
-    } while (parsed.newline);
+    } while (parsed.nextIndex < input.length);
 
     // Pass 2: remove comments and blank lines
 
@@ -105,8 +103,7 @@ export function loadMin(input: string): NestedText | null {
         }
 
         if (merge) {
-            before.value += before.newline + after.value;
-            before.newline = after.newline;
+            before.value += "\n" + after.value;
             lines.splice(i + 1, 1);
         } else {
             i += 1;
@@ -151,7 +148,6 @@ function parseLine(
         column: column,
         indent: 0,
         line: line,
-        newline: "",
         nextIndex: index,
         startIndex: index,
         type: ParsedLineType.BLANK,
@@ -229,10 +225,8 @@ function conclude(
     result: ParsedLine
 ): ParsedLine {
     if (input[index] === "\r" && input[index + 1] === "\n") {
-        result.newline = "\r\n";
         result.nextIndex = index + 2;
     } else {
-        result.newline = input[index];
         result.nextIndex = index + 1;
     }
 
