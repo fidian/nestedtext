@@ -1,57 +1,61 @@
-import { basename, join } from "path";
-import { existsSync, readdirSync, statSync, readFileSync } from "fs";
-import test from "ava";
-import { DumpOptions, dump, load } from "../src/index";
+import { basename, join } from "node:path";
+import { access, constants, readdir, stat, readFile } from "fs/promises";
+import { test } from "node:test";
+import * as assert from "node:assert";
+import { dump, load } from "../src/index.js";
+import type { DumpOptions } from "../src/index.js";
 
 const basePath = join(process.cwd(), "tests/official_tests/test_cases");
-const dirs = readdirSync(basePath);
+const dirs = await readdir(basePath);
 
 for (const dir of dirs) {
     const resolved = join(basePath, dir);
-    if (statSync(resolved).isDirectory()) {
-        if (existsSync(join(resolved, "load_in.nt"))) {
-            testLoad(resolved);
-        }
+    if ((await stat(resolved)).isDirectory()) {
+        try {
+            await access(join(resolved, "load_in.nt"), constants.F_OK);
+            await testLoad(resolved);
+        } catch (_ignore) {}
 
-        if (existsSync(join(resolved, "dump_in.json"))) {
-            testDump(resolved);
-        }
+        try {
+            await access(join(resolved, "dump_in.json"), constants.F_OK);
+            await testDump(resolved);
+        } catch (_ignore) {}
     }
 }
 
-function testLoad(dir) {
-    const nt = readFileSync(join(dir, "load_in.nt"), "utf8");
+async function testLoad(dir: string) {
+    const nt = await readFile(join(dir, "load_in.nt"), "utf8");
 
-    if (existsSync(join(dir, "load_out.json"))) {
-        const json = require(join(dir, "load_out.json"));
-        test(`${basename(dir)}: load produces JSON`, (t) => {
-            t.notThrows(() => {
-                const result = load(nt);
-
-                t.deepEqual(result, json);
-            });
+    try {
+        await access(join(dir, "load_out.json"), constants.F_OK);
+        const json = await loadJson(join(dir, "load_out.json"));
+        test(`${basename(dir)}: load produces JSON`, () => {
+            const result = load(nt);
+            assert.deepStrictEqual(result, json);
         });
-    } else {
-        const err = require(join(dir, "load_err.json"));
+    } catch (_ignore) {
+        const err = await loadJson(join(dir, "load_err.json"));
 
-        test(`${basename(dir)}: load produces error`, (t) => {
+        test(`${basename(dir)}: load produces error`, () => {
             try {
                 load(nt);
-                t.fail('No error was thrown');
-            } catch (e) {
-                t.is(e.lineno, err.lineno);
-                t.is(e.colno, err.colno);
+            } catch (e: any) {
+                assert.strictEqual(e.lineno, err.lineno);
+                assert.strictEqual(e.colno, err.colno);
+                return;
             }
+            assert.fail('No error was thrown');
         });
     }
 }
 
-function testDump(dir) {
-    const json = require(join(dir, "dump_in.json"));
+async function testDump(dir: string) {
+    const json = await loadJson(join(dir, "dump_in.json"));
 
-    if (existsSync(join(dir, "dump_out.nt"))) {
-        const nt = readFileSync(join(dir, "dump_out.nt"), "utf8");
-        test(`${basename(dir)}: dump produces NestedText`, (t) => {
+    try {
+        await access(join(dir, "dump_out.nt"), constants.F_OK);
+        const nt = await readFile(join(dir, "dump_out.nt"), "utf8");
+        test(`${basename(dir)}: dump produces NestedText`, () => {
             const options: DumpOptions = {};
 
             // string_8 has no way to detect the end of line marker from the
@@ -64,18 +68,25 @@ function testDump(dir) {
                 options.newline = '\r\n';
             }
 
-            t.is(dump(json, options), nt);
+            assert.strictEqual(dump(json, options), nt);
         });
-    } else {
-        const err = require(join(dir, "dump_err.json"));
+    } catch (_ignore) {
+        const err = await loadJson(join(dir, "dump_err.json"));
 
-        test(`${basename(dir)}: dump produces error`, (t) => {
+        test(`${basename(dir)}: dump produces error`, () => {
             try {
                 dump(json);
-                t.fail(`${dir}: dump produces an error`);
-            } catch (e) {
-                t.deepEqual(e.culprit, err.culprit);
+            } catch (e: any) {
+                assert.deepStrictEqual(e.culprit, err.culprit);
+                return;
             }
+
+            assert.fail(`${dir}: dump did not produce an error`);
         });
     }
+}
+
+async function loadJson(path: string) {
+    const json = await readFile(path, "utf8");
+    return JSON.parse(json);
 }

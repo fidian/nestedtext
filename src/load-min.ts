@@ -1,4 +1,4 @@
-import { NestedText, NestedTextList, NestedTextDict } from "./types";
+import { NestedText, NestedTextList, NestedTextDict } from "./types.js";
 
 enum ParsedLineType {
     BLANK = "B",

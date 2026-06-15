@@ -14,7 +14,7 @@ status "Clean"
 rm -rf dist/
 
 status "Compile"
-tsc
+tsc --project tsconfig.build.json
 
 status "Build module"
 rollup dist/index.js --file dist/nestedtext.mjs --format esm

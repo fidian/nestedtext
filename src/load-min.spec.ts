@@ -1,24 +1,25 @@
-import test from "ava";
-import { loadMin } from "./load-min";
+import { test } from "node:test";
+import * as assert from "node:assert";
+import { loadMin } from "./load-min.js";
 
-test("load empty file returns null", (t) => {
-    t.is(loadMin(""), null);
+test("load empty file returns null", () => {
+    assert.strictEqual(loadMin(""), null);
 });
 
-test("load a file with comments and blanks returns null", (t) => {
-    t.is(loadMin("    # comment\n  \n"), null);
+test("load a file with comments and blanks returns null", () => {
+    assert.strictEqual(loadMin("    # comment\n  \n"), null);
 });
 
-test("array", (t) => {
-    t.deepEqual(loadMin("- one\n- two"), [ "one", "two" ]);
+test("array", () => {
+    assert.deepStrictEqual(loadMin("- one\n- two"), [ "one", "two" ]);
 });
 
-test("object", (t) => {
-    t.deepEqual(loadMin("key: value"), { key: "value" });
+test("object", () => {
+    assert.deepStrictEqual(loadMin("key: value"), { key: "value" });
 });
 
-test("website example", (t) => {
-    t.deepEqual(loadMin(`default repository: home
+test("website example", () => {
+    assert.deepStrictEqual(loadMin(`default repository: home
 report style: tree
 compact format: {repo}: {size:{fmt}}.  Last back up: {last_create:ddd, MMM DD}.
 normal format: {host:<8} {user:<5} {config:<9} {size:<8.2b} {last_create:ddd, MMM DD}
@@ -67,8 +68,8 @@ repositories:
     });
 });
 
-test("website example for indentation", (t) => {
-    t.deepEqual(loadMin(`Name 1: Value 1
+test("website example for indentation", () => {
+    assert.deepStrictEqual(loadMin(`Name 1: Value 1
 Name 2:
     Name 2a: Value 2a
     Name 2b: Value 2b

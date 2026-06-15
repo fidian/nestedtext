@@ -1,6 +1,6 @@
 {
     "name": "nestedtext",
-    "version": "1.1.1",
+    "version": "1.2.0",
     "description": "Human friendly representation of data, similar to YAML or JSON",
     "keywords": [
         "hook",
@@ -22,8 +22,8 @@
     "homepage": "https://github.com/fidian/nestedtext",
     "scripts": {
         "build": "scripts/build",
-        "reinstall": "rm -rf node_modules && npm install",
-        "test": "tsx node_modules/.bin/ava"
+        "reinstall": "rm -rf node_modules package-lock.json && npm install",
+        "test": "tsx --test src/*.spec.ts tests/*.ts"
     },
     "main": "dist/index.js",
     "module": "dist/nestedtext.mjs",
@@ -31,22 +31,13 @@
     "type": "module",
     "types": "dist/index.d.ts",
     "devDependencies": {
-        "ava": "^6.1.3",
-        "tsx": "^4.16.2",
-        "typescript": "^5.5.3"
-    },
-    "ava": {
-        "extensions": {
-            "cjs": true,
-            "mjs": true,
-            "js": true,
-            "ts": "commonjs"
-        }
+        "@types/node": "^25.9.3",
+        "tsx": "^4.22.4",
+        "typescript": "^6.0.3"
     },
     "dependencies": {
-        "@types/node": "^20.14.12",
         "read-input": "^0.3.1",
-        "rollup": "^4.20.0",
-        "terser": "^5.31.3"
+        "rollup": "^4.62.0",
+        "terser": "^5.48.0"
     }
 }

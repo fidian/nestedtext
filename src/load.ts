@@ -1,4 +1,4 @@
-import { NestedText, NestedTextList, NestedTextDict } from "./types";
+import { NestedText, NestedTextParseError, NestedTextList, NestedTextDict } from "./types.js";
 
 enum ParsedLineType {
     BLANK = "B",
@@ -256,17 +256,17 @@ function throwError(
     message: string
 ): never {
     const line = result.line;
-    let error: Error;
+    let error: NestedTextParseError;
 
     if (index !== null) {
         const column = result.column + index - result.startIndex;
-        error = new Error(`Line ${line}, column ${column}: ${message}`);
-        (error as any).lineno = line - 1; // Odd zero-based indexing for tests
-        (error as any).colno = column - 1; // Odd zero-based indexing for tests
+        error = new Error(`Line ${line}, column ${column}: ${message}`) as NestedTextParseError;
+        error.lineno = line - 1; // Odd zero-based indexing for tests
+        error.colno = column - 1; // Odd zero-based indexing for tests
     } else {
-        error = new Error(`Line ${line}: ${message}`);
-        (error as any).lineno = line - 1; // Odd zero-based indexing for tests
-        (error as any).colno = null;
+        error = new Error(`Line ${line}: ${message}`) as NestedTextParseError;
+        error.lineno = line - 1; // Odd zero-based indexing for tests
+        error.colno = null;
     }
 
     throw error;

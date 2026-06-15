@@ -1,4 +1,4 @@
-import { NestedText, NestedTextDict, NestedTextList } from "./types";
+import { NestedText, NestedTextDumpError, NestedTextDict, NestedTextList } from "./types.js";
 
 export interface DumpOptions {
     indent?: string;
@@ -25,8 +25,8 @@ function mapLines(content: string, indent: string, options: DumpOptions, token: 
 }
 
 function throwError(culprit: any, message: string): never {
-    const error = new Error(message);
-    (error as any).culprit = culprit;
+    const error = new Error(message) as NestedTextDumpError;
+    error.culprit = culprit;
     throw error;
 }
 
